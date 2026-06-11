@@ -57,8 +57,19 @@ app.Map("cities/{cityid:guid}", async(context) =>
 
 //minlength(value),maxlength(value),length(min,max) -- route constraint
 
+
+//regex route constarint
+//eg: sales-report/2030/apr (only set of months like 4 months lets say)
+app.Map("sales-report/{year:int:min(1990)}/{month:regex(^(apr|jul|oct|jan)$)}", async (context) =>
+{
+   int year= Convert.ToInt32(context.Request.RouteValues["year"]);
+   string? month= Convert.ToString(context.Request.RouteValues["month"]);
+
+    await context.Response.WriteAsync($"year is: {year} and month is :{month}");
+
+});
 app.MapFallback(async (context) =>
 {
-    await context.Response.WriteAsync($"reqest received at {context.Request.Path}");
+    await context.Response.WriteAsync($"No route matched at{context.Request.Path}");
 });
 app.Run();
